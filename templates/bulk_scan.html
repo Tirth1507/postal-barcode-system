@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Bulk Scan</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,500..900&family=Source+Sans+3:wght@400;600;700&display=swap">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+<body>
+
+{% include 'navbar.html' %}
+
+<header class="hero hero-compact">
+    <div class="container">
+        <h1>Bulk Scan Articles</h1>
+        <p>Add many article numbers in one go.</p>
+    </div>
+</header>
+
+<main class="container">
+
+    <section class="docket narrow">
+
+        <div class="docket-head">
+            <h2>Article numbers</h2>
+            <p>Paste one article number per line.</p>
+        </div>
+
+        <div class="perforation"></div>
+
+        <form action="/bulk-add" method="POST">
+
+            <label for="articles">Article numbers</label>
+
+            <textarea
+                class="textarea"
+                id="articles"
+                name="articles"
+                spellcheck="false"
+                placeholder="UC538724753IN&#10;JJ981283573IN&#10;EG624495885IN"></textarea>
+
+            <button class="btn" type="submit">
+                Add all articles
+            </button>
+
+        </form>
+
+    </section>
+
+</main>
+
+</body>
+</html>

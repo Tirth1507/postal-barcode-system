@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Scan Articles</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,500..900&family=Source+Sans+3:wght@400;600;700&display=swap">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+<body>
+
+{% include 'navbar.html' %}
+
+<header class="hero hero-compact">
+    <div class="container">
+        <h1>Scan Article</h1>
+        <p>Total scanned: {{ scanned_count }}</p>
+    </div>
+</header>
+
+<main class="container">
+
+    <section class="docket narrow">
+
+        <div class="docket-head">
+            <h2>Add an article</h2>
+            <p>Scan the barcode or type the article number, then add it.</p>
+        </div>
+
+        <div class="perforation"></div>
+
+        <form action="/add_scan" method="POST">
+
+            <label for="article_number">Article number</label>
+
+            <div class="form-row">
+
+                <input
+                    class="text-input"
+                    id="article_number"
+                    type="text"
+                    name="article_number"
+                    placeholder="Enter article number"
+                    autocomplete="off"
+                    autofocus
+                    required
+                >
+
+                <button class="btn" type="submit">
+                    Add
+                </button>
+
+            </div>
+
+        </form>
+
+    </section>
+
+</main>
+
+</body>
+</html>

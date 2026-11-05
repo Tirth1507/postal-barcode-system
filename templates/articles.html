@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Stored Articles</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,500..900&family=Source+Sans+3:wght@400;600;700&display=swap">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+<body>
+
+{% include 'navbar.html' %}
+
+<header class="hero hero-compact">
+    <div class="container">
+        <h1>Stored Articles</h1>
+        <p>Total articles: {{ articles|length }}</p>
+    </div>
+</header>
+
+<main class="container">
+
+    <section class="docket">
+
+        <div class="docket-head">
+            <h2>Expected article numbers</h2>
+            <p>These are the articles every scan is checked against.</p>
+        </div>
+
+        <div class="perforation"></div>
+
+        {% if articles %}
+
+        <div class="docket-body">
+            <ol class="article-list">
+                {% for article in articles %}
+                <li>{{ article.article_number }}</li>
+                {% endfor %}
+            </ol>
+        </div>
+
+        {% else %}
+
+        <p class="empty">
+            No articles stored yet.
+            <a href="/">Upload a BO slip</a> or use
+            <a href="/bulk-scan">bulk scan</a> to add some.
+        </p>
+
+        {% endif %}
+
+    </section>
+
+</main>
+
+</body>
+</html>

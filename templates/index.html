@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>SPBVS</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,500..900&family=Source+Sans+3:wght@400;600;700&display=swap">
+
+    <link rel="stylesheet"
+          href="{{ url_for(
+          'static',
+          filename='style.css'
+          ) }}">
+
+</head>
+
+<body>
+
+{% include 'navbar.html' %}
+
+<header class="hero">
+
+    <div class="container hero-inner">
+
+        <div>
+            <h1>Smart Postal Bag Verification System</h1>
+            <p>
+                Check every article in a bag against its BO slip
+                before the bag is closed.
+            </p>
+        </div>
+
+        <svg class="postmark"
+             viewBox="0 0 160 160"
+             aria-hidden="true"
+             fill="none"
+             stroke="currentColor">
+
+            <circle cx="80" cy="80" r="70" stroke-width="3"/>
+            <circle cx="80" cy="80" r="50" stroke-width="1.5"/>
+
+            <defs>
+                <path id="postmark-arc"
+                      d="M 80 80 m -60 0 a 60 60 0 1 1 120 0 a 60 60 0 1 1 -120 0"/>
+            </defs>
+
+            <text fill="currentColor"
+                  stroke="none"
+                  font-family="Archivo, Arial, sans-serif"
+                  font-size="12"
+                  font-weight="700"
+                  letter-spacing="3">
+                <textPath href="#postmark-arc" startOffset="2%">
+                    POSTAL BAG VERIFICATION SYSTEM
+                </textPath>
+            </text>
+
+            <text x="80" y="86"
+                  fill="currentColor"
+                  stroke="none"
+                  text-anchor="middle"
+                  font-family="Archivo, Arial, sans-serif"
+                  font-size="17"
+                  font-weight="800"
+                  letter-spacing="1">
+                SPBVS
+            </text>
+
+            <path d="M 52 102 q 7 -6 14 0 t 14 0 t 14 0 t 14 0"
+                  stroke-width="2"/>
+        </svg>
+
+    </div>
+
+</header>
+
+<main class="container">
+
+    <div class="workspace">
+
+        <section class="docket">
+
+            <div class="docket-head">
+                <h2>Upload BO slip</h2>
+                <p>Choose the slip file for the bag you are about to verify.</p>
+            </div>
+
+            <div class="perforation"></div>
+
+            <form
+                action="/upload"
+                method="POST"
+                enctype="multipart/form-data">
+
+                <label for="slip-file">Slip file</label>
+
+                <input
+                    id="slip-file"
+                    type="file"
+                    name="file"
+                    required>
+
+                <button
+                    class="btn"
+                    type="submit">
+
+                    Upload slip
+
+                </button>
+
+            </form>
+
+        </section>
+
+        <aside class="procedure">
+
+            <h2>How a bag is verified</h2>
+
+            <ol>
+                <li>
+                    <strong>Upload the BO slip</strong>
+                    <span>This sets the list of articles expected in the bag.</span>
+                </li>
+                <li>
+                    <strong>Scan each article</strong>
+                    <span>Every barcode is matched against the slip as it is scanned.</span>
+                </li>
+                <li>
+                    <strong>Review what is missing</strong>
+                    <span>Articles not yet scanned stay flagged until they are found.</span>
+                </li>
+            </ol>
+
+        </aside>
+
+    </div>
+
+    <div class="reset-strip">
+
+        <div>
+            <h3>Reset system</h3>
+            <p>Deletes all data in the system. This cannot be undone.</p>
+        </div>
+
+        <a class="btn btn-outline"
+           id="reset-link"
+           href="/reset-system">
+
+            Reset entire system
+
+        </a>
+
+    </div>
+
+</main>
+
+<dialog class="modal" id="reset-dialog" aria-labelledby="reset-title" data-state="confirm">
+
+    <div class="modal-pane" data-pane="confirm">
+        <h2 id="reset-title">Reset the entire system?</h2>
+        <p>This deletes all data in the system and cannot be undone.</p>
+        <div class="modal-actions">
+            <button type="button" class="btn btn-outline" data-close>Cancel</button>
+            <button type="button" class="btn" id="reset-confirm">Reset everything</button>
+        </div>
+    </div>
+
+    <div class="modal-pane" data-pane="success" hidden>
+        <svg class="stamp" viewBox="0 0 96 96" aria-hidden="true"
+             fill="none" stroke="currentColor">
+            <circle cx="48" cy="48" r="42" stroke-width="4"/>
+            <circle cx="48" cy="48" r="33" stroke-width="1.5"/>
+            <path class="stamp-check" d="M30 49 l12 12 l24 -26" stroke-width="6"
+                  stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <h2>Reset successful</h2>
+        <p>The system has been reset. Upload a new BO slip to start again.</p>
+        <div class="modal-actions">
+            <button type="button" class="btn" data-close>Done</button>
+        </div>
+    </div>
+
+    <div class="modal-pane" data-pane="error" hidden>
+        <h2>Reset failed</h2>
+        <p>The server did not complete the reset. Nothing was confirmed as deleted. Try again.</p>
+        <div class="modal-actions">
+            <button type="button" class="btn btn-outline" data-close>Close</button>
+            <button type="button" class="btn" id="reset-retry">Try again</button>
+        </div>
+    </div>
+
+</dialog>
+
+<script>
+(function () {
+    var dialog  = document.getElementById('reset-dialog');
+    var link    = document.getElementById('reset-link');
+    var confirm = document.getElementById('reset-confirm');
+    var retry   = document.getElementById('reset-retry');
+    var panes   = dialog.querySelectorAll('[data-pane]');
+
+    function show(name) {
+        dialog.dataset.state = name;
+        panes.forEach(function (p) { p.hidden = p.dataset.pane !== name; });
+    }
+
+    async function doReset(btn) {
+        var label = btn.textContent;
+        btn.disabled = true;
+        btn.textContent = 'Resetting\u2026';
+        try {
+            var res = await fetch('/reset-system', { credentials: 'same-origin' });
+            if (!res.ok) throw new Error('Reset failed');
+            show('success');
+        } catch (e) {
+            show('error');
+        } finally {
+            btn.disabled = false;
+            btn.textContent = label;
+        }
+    }
+
+    link.addEventListener('click', function (e) {
+        e.preventDefault();
+        show('confirm');
+        dialog.showModal();
+    });
+
+    confirm.addEventListener('click', function () { doReset(confirm); });
+    retry.addEventListener('click',   function () { doReset(retry); });
+
+    dialog.querySelectorAll('[data-close]').forEach(function (b) {
+        b.addEventListener('click', function () { dialog.close(); });
+    });
+
+    dialog.addEventListener('click', function (e) {
+        if (e.target === dialog) dialog.close();
+    });
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Generated Barcodes</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,500..900&family=Source+Sans+3:wght@400;600;700&display=swap">
+
+    <link rel="stylesheet"
+          href="{{ url_for(
+          'static',
+          filename='style.css'
+          ) }}">
+
+</head>
+
+<body>
+
+{% include 'navbar.html' %}
+
+<header class="hero hero-compact">
+    <div class="container">
+        <h1>Generated Barcodes</h1>
+        <p>Total barcodes: {{ files|length }}</p>
+    </div>
+</header>
+
+<main class="container">
+
+    <div class="btn-row">
+
+        <a class="btn btn-dark" href="/generate-barcodes">
+            Generate all barcodes
+        </a>
+
+        <a class="btn btn-outline"
+           href="/delete-barcodes"
+           onclick="return confirm(
+           'Delete all barcodes?'
+           )">
+            Delete all barcodes
+        </a>
+
+    </div>
+
+    {% if files %}
+
+    <div class="barcode-grid">
+
+        {% for file in files %}
+
+        <div class="label">
+
+            <h3>
+                {{ file.replace('.png','') }}
+            </h3>
+
+            <img
+                src="{{ url_for(
+                'static',
+                filename='barcodes/' + file
+                ) }}"
+                alt="Barcode for {{ file.replace('.png','') }}">
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    {% else %}
+
+    <div class="empty-panel">
+        <p class="empty">
+            No barcodes yet. Select Generate all barcodes to create
+            one for each stored article.
+        </p>
+    </div>
+
+    {% endif %}
+
+</main>
+
+</body>
+</html>

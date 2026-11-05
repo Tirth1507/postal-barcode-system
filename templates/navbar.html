@@ -1,0 +1,58 @@
+<nav class="site-nav" aria-label="Main">
+
+    <div class="container site-nav-inner">
+
+        <a class="brand" href="/">
+            <span class="brand-mark" aria-hidden="true">PB</span>
+            SPBVS
+        </a>
+
+        <ul class="nav-links">
+
+            <li>
+                <a href="/"
+                   {% if request.path == '/' %}class="active" aria-current="page"{% endif %}>
+                    Home
+                </a>
+            </li>
+
+            <li>
+                <a href="/articles"
+                   {% if request.path.startswith('/articles') %}class="active" aria-current="page"{% endif %}>
+                    Expected articles
+                </a>
+            </li>
+
+            <li>
+                <a href="/scan"
+                   {% if request.path.startswith('/scan') %}class="active" aria-current="page"{% endif %}>
+                    Scan articles
+                </a>
+            </li>
+
+            <li>
+                <a href="/bulk-scan"
+                   {% if request.path.startswith('/bulk-scan') %}class="active" aria-current="page"{% endif %}>
+                    Bulk scan
+                </a>
+            </li>
+
+            <li>
+                <a href="/barcodes"
+                   {% if request.path.startswith('/barcodes') %}class="active" aria-current="page"{% endif %}>
+                    Barcodes
+                </a>
+            </li>
+
+            <li>
+                <a href="/verify"
+                   {% if request.path.startswith('/verify') %}class="active" aria-current="page"{% endif %}>
+                    Verification
+                </a>
+            </li>
+
+        </ul>
+
+    </div>
+
+</nav>

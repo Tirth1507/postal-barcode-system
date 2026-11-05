@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>SPBVS Dashboard</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,500..900&family=Source+Sans+3:wght@400;600;700&display=swap">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+{% include 'navbar.html' %}
+
+<header class="hero hero-compact">
+    <div class="container">
+        <h1>Verification</h1>
+        <p>Scanned articles checked against the BO slip.</p>
+    </div>
+</header>
+
+<main class="container">
+
+    <section class="docket">
+
+        <dl class="tally">
+
+            <div>
+                <dt>Expected</dt>
+                <dd>{{ expected_count }}</dd>
+            </div>
+
+            <div>
+                <dt>Scanned</dt>
+                <dd>{{ scanned_count }}</dd>
+            </div>
+
+            <div class="is-missing">
+                <dt>Missing</dt>
+                <dd>{{ missing_count }}</dd>
+            </div>
+
+        </dl>
+
+        <div class="progress">
+
+            <div class="progress-head">
+                <span>Completion</span>
+                <span>{{ completion }}%</span>
+            </div>
+
+            <progress class="progress-bar"
+                      value="{{ completion }}"
+                      max="100"
+                      aria-label="Completion">
+                {{ completion }}%
+            </progress>
+
+        </div>
+
+    </section>
+
+    <div class="lists">
+
+        <section class="docket is-received">
+
+            <div class="docket-head">
+                <h2>Received articles</h2>
+                <p>{{ received|length }} scanned and matched</p>
+            </div>
+
+            <div class="perforation"></div>
+
+            {% if received %}
+
+            <div class="docket-body">
+                <ol class="article-list">
+                    {% for article in received %}
+                    <li>{{ article }}</li>
+                    {% endfor %}
+                </ol>
+            </div>
+
+            {% else %}
+
+            <p class="empty">
+                Nothing received yet. <a href="/scan">Scan an article</a> to begin.
+            </p>
+
+            {% endif %}
+
+        </section>
+
+        <section class="docket">
+
+            <div class="docket-head">
+                <h2>Missing articles</h2>
+                <p>{{ missing|length }} still to be scanned</p>
+            </div>
+
+            <div class="perforation"></div>
+
+            {% if missing %}
+
+            <div class="docket-body">
+                <ol class="article-list">
+                    {% for article in missing %}
+                    <li>{{ article }}</li>
+                    {% endfor %}
+                </ol>
+            </div>
+
+            {% else %}
+
+            <p class="empty">No articles are missing.</p>
+
+            {% endif %}
+
+        </section>
+
+    </div>
+
+    <div class="reset-strip">
+
+        <div>
+            <h3>Reset verification</h3>
+            <p>Clears the scanned articles so you can start the bag again.</p>
+        </div>
+
+        <a class="btn btn-outline"
+           href="/reset"
+           onclick="return confirm(
+           'Reset verification? Scanned articles will be cleared.'
+           )">
+            Reset verification
+        </a>
+
+    </div>
+
+</main>
+
+</body>
+</html>
